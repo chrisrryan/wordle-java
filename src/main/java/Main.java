@@ -2,15 +2,15 @@ public class Main {
 
     public static void main(String[] args) {
 
-//        PageActions pageActions = new PageActions();
-        Solver solver = new Solver();
+        PageActions pageActions = new PageActions();
 
-//        pageActions.enterWord("wakes");
+        for (int i=0; i < 6; i++) {
+            pageActions.enterWord();
+        }
 
-//        pageActions.wait(5000);
+        pageActions.wait(20000);
 
-        //close Chrome
-//        pageActions.closeDown();
+        pageActions.closeDown();
 
     }
 }

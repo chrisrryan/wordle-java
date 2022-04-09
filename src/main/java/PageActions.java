@@ -10,10 +10,13 @@ public class PageActions {
     private ChromeDriver driver;
     private SearchContext keyboardShadowRoot;
     private WebElement boardElement;
+    private Solver solver;
 
     PageActions() {
+        // instantiate the solver
+        solver = new Solver();
         // instantiate the Chrome driver
-        System.setProperty("webdriver.chrome.driver", "src/main/resources/chromedriver.exe");
+        System.setProperty("webdriver.chrome.driver", "src/main/resources/chromedriver");
         System.setProperty("webdriver.chrome.silentOutput", "true");
         java.util.logging.Logger.getLogger("org.openqa.selenium").setLevel(Level.OFF);
         driver = new ChromeDriver();
@@ -44,21 +47,26 @@ public class PageActions {
         wait(10000);
     }
 
-    public void enterWord(String word) {
+    public void enterWord() {
+        String word = solver.getWord();
+
         for (int i = 0; i < 5; i++) clickLetter(word.charAt(i));
         clickLetter('↵'); // Enter key
         // Wordle doesn't reveal word results immediately. Give it time to do its thing.
         wait(3000);
 
-        for (int i = 1; i <= 5; i++) letterEvaluation(1, i);
+        int attempts = solver.getAttempts();
+        String[] evaluation = new String[5];
+        for (int i = 0; i < 5; i++)
+            evaluation[i] = letterEvaluation(attempts, i+1);
+
+        solver.processEvaluation(evaluation);
     }
 
     private String letterEvaluation(int rowIndex, int tileIndex) {
         WebElement row = boardElement.findElement(By.cssSelector(String.format("game-row:nth-child(%s)", rowIndex)));
         SearchContext shadowRoot = row.getShadowRoot();
         WebElement tile = shadowRoot.findElement(By.cssSelector(String.format("game-tile:nth-child(%s)", tileIndex)));
-        System.out.println(tile.getAttribute("letter"));
-        System.out.println(tile.getAttribute("evaluation"));
         return tile.getAttribute("evaluation");
     }
 
