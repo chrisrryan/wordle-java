@@ -4,11 +4,12 @@ public class Main {
 
         PageActions pageActions = new PageActions();
 
-        for (int i=0; i < 6; i++) {
-            pageActions.enterWord();
+        boolean done = false;
+        while (!done) {
+            done = pageActions.enterWord();
         }
 
-        pageActions.wait(20000);
+        pageActions.wait(300_000);
 
         pageActions.closeDown();
 

@@ -50,18 +50,28 @@ public class Solver {
         words = words.stream().filter(mustHaveFilter).collect(Collectors.toList());
     }
 
-    public void processEvaluation(String[] evaluation) {
+    public boolean processEvaluation(String[] evaluation) {
+        boolean done = Arrays.stream(evaluation).allMatch(s -> s.equals("correct")) || attempts == 6;
+        if (!done) {
         char[] letters = latestWord.toCharArray();
         for (int i = 0; i < 5; i++) {
             switch (evaluation[i]) {
                 case "absent":
-                    // ToDo Duplicate letter one present or correct and one absent.
-                    // if (this.result.some((s) => s.letter === letter && s.evaluation !== "absent")
-//              { this.removeLetterFromColumn(letter, index);
-//              } else {
-//                this.removeLetterFromAll(letter);
-//              }
-                    removeLetterFromColumn(letters[i], i);
+                    // Duplicate letter one present/correct and one absent.
+                    boolean repeatingLetterTooMany = false;
+                    //Is this letter repeated in the word?
+                    if (5 - latestWord.replace(String.valueOf(letters[i]), "").length() >= 2) {
+                       // If so, check if any are flagged as present or correct.
+                       for (int j = 0; j < 5; j++) {
+                           if (letters[j] == letters[i] && !evaluation[j].equals("absent"))
+                               repeatingLetterTooMany = true;
+                       }
+                    }
+                    if (repeatingLetterTooMany) {
+                        removeLetterFromColumn(letters[i], i);
+                    } else {
+                        removeLetterFromAll(letters[i]);
+                    }
                     break;
                 case "correct":
                     setLetterAsFound(letters[i], i);
@@ -72,6 +82,8 @@ public class Solver {
                     break;
             }
         }
+        }
+        return done;
     }
 
     public String getWord() {
@@ -79,7 +91,7 @@ public class Solver {
 
         switch (attempts) {
             case 1:
-                latestWord = "wakes";
+                latestWord = "adieu";
                 break;
             default:
                 String viableRegEx = "";

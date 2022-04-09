@@ -47,7 +47,7 @@ public class PageActions {
         wait(10000);
     }
 
-    public void enterWord() {
+    public boolean enterWord() {
         String word = solver.getWord();
 
         for (int i = 0; i < 5; i++) clickLetter(word.charAt(i));
@@ -60,7 +60,7 @@ public class PageActions {
         for (int i = 0; i < 5; i++)
             evaluation[i] = letterEvaluation(attempts, i+1);
 
-        solver.processEvaluation(evaluation);
+        return solver.processEvaluation(evaluation);
     }
 
     private String letterEvaluation(int rowIndex, int tileIndex) {
