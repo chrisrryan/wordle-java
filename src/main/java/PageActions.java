@@ -7,10 +7,9 @@ import static java.lang.Thread.sleep;
 
 public class PageActions {
 
-    private ChromeDriver driver;
-    private WebElement keyboard;
-    private WebElement boardElement;
-    private Solver solver;
+    private final ChromeDriver driver;
+    private final WebElement keyboard;
+    private final Solver solver;
 
     PageActions() {
         // instantiate the solver
