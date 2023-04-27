@@ -12,7 +12,6 @@ public class Solver {
     private @Getter
     int attempts;
     private List<String> words = new ArrayList<>();
-    private List<Character> mustHaveLetters = new ArrayList<>();
     private String[] possibles = new String[5];
     private Predicate<String> distinctLettersFilter;
     private Random random;

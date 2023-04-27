@@ -1,28 +1,30 @@
+import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-
-import java.util.logging.Level;
+import org.openqa.selenium.remote.RemoteWebDriver;
+import java.time.Duration;
 
 import static java.lang.Thread.sleep;
+import static org.openqa.selenium.chrome.ChromeDriverService.CHROME_DRIVER_VERBOSE_LOG_PROPERTY;
+import static org.openqa.selenium.chrome.ChromeDriverService.CHROME_DRIVER_WHITELISTED_IPS_PROPERTY;
 
 public class PageActions {
 
-    private final ChromeDriver driver;
+    private static final long LOAD_TIMEOUT = 10L;
+    private final RemoteWebDriver driver;
     private final WebElement keyboard;
     private final Solver solver;
-
     PageActions() {
         // instantiate the solver
         solver = new Solver();
-        // instantiate the Chrome driver
-        System.setProperty("webdriver.chrome.driver", "src/main/resources/chromedriver.exe");
-        System.setProperty("webdriver.chrome.silentOutput", "true");
-        java.util.logging.Logger.getLogger("org.openqa.selenium").setLevel(Level.OFF);
 
-        ChromeOptions chromeOptions = new ChromeOptions();
-        chromeOptions.addArguments("--remote-allow-origins=*");
-        driver = new ChromeDriver(chromeOptions);
+        // instantiate the Chrome driver
+        WebDriverManager.chromedriver().setup();
+        System.setProperty(CHROME_DRIVER_VERBOSE_LOG_PROPERTY, "false");
+        System.setProperty(CHROME_DRIVER_WHITELISTED_IPS_PROPERTY, "127.0.0.1");
+        driver = new ChromeDriver(getChromeOptions());
+        configureDriver(driver);
 
         String baseUrl = "https://www.nytimes.com/games/wordle/index.html";
         driver.get(baseUrl);
@@ -33,6 +35,25 @@ public class PageActions {
         driver.findElement(By.xpath("//button[contains(@aria-label, 'Close')]")).click();
 
         keyboard = driver.findElement(By.xpath("//div[contains(@aria-label, 'Keyboard')]"));
+    }
+
+    private static ChromeOptions getChromeOptions() {
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("--remote-allow-origins=*");
+        options.addArguments("--disable-logging");
+        options.addArguments("--log-level=3");
+        options.addArguments("--disable-crash-reporter");
+        options.addArguments("--no-sandbox");
+        options.addArguments("--disable-dev-shm-usage");
+        options.setHeadless(false);
+        return options;
+    }
+
+    private static void configureDriver(RemoteWebDriver remoteWebDriver) {
+        remoteWebDriver.manage().window().maximize();
+        remoteWebDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(LOAD_TIMEOUT));
+        remoteWebDriver.manage().window().setPosition(new Point(0, 0));
+        remoteWebDriver.manage().window().setSize(new Dimension(1920, 1080));
     }
 
     public boolean enterWord() {
