@@ -1,8 +1,14 @@
-import io.github.bonigarcia.wdm.WebDriverManager;
+//import io.github.bonigarcia.wdm.WebDriverManager;
+
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.PageLoadStrategy;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.chrome.ChromeDriver;
+
 import java.time.Duration;
 
 import static java.lang.Thread.sleep;
@@ -12,19 +18,36 @@ import static org.openqa.selenium.chrome.ChromeDriverService.CHROME_DRIVER_WHITE
 public class PageActions {
 
     private static final long LOAD_TIMEOUT = 10L;
-    private final RemoteWebDriver driver;
+    private final WebDriver driver;
     private final WebElement keyboard;
     private final Solver solver;
+
     PageActions() {
         // instantiate the solver
         solver = new Solver();
 
+        driver = new ChromeDriver();
+        driver.get("https://google.com");
+        System.out.println("ChromeDriver launched successfully...");
+
         // instantiate the Chrome driver
-        WebDriverManager.chromedriver().setup();
-        System.setProperty(CHROME_DRIVER_VERBOSE_LOG_PROPERTY, "false");
-        System.setProperty(CHROME_DRIVER_WHITELISTED_IPS_PROPERTY, "127.0.0.1");
-        driver = new ChromeDriver(getChromeOptions());
-        configureDriver(driver);
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("--remote-allow-origins=*");
+        options.addArguments("--disable-logging");
+        options.addArguments("--log-level=3");
+        options.addArguments("--disable-crash-reporter");
+        options.addArguments("--no-sandbox");
+        options.addArguments("--disable-dev-shm-usage");
+        options.setHeadless(false);
+        options.setPageLoadStrategy(PageLoadStrategy.NORMAL);
+//        driver = new ChromeDriver(options);
+
+
+//        WebDriverManager.chromedriver().setup();
+//        System.setProperty(CHROME_DRIVER_VERBOSE_LOG_PROPERTY, "false");
+//        System.setProperty(CHROME_DRIVER_WHITELISTED_IPS_PROPERTY, "127.0.0.1");
+//        driver = new ChromeDriver(getChromeOptions());
+//        configureDriver(driver);
 
         String baseUrl = "https://www.nytimes.com/games/wordle/index.html";
         driver.get(baseUrl);
@@ -37,17 +60,17 @@ public class PageActions {
         keyboard = driver.findElement(By.xpath("//div[contains(@aria-label, 'Keyboard')]"));
     }
 
-    private static ChromeOptions getChromeOptions() {
-        ChromeOptions options = new ChromeOptions();
-        options.addArguments("--remote-allow-origins=*");
-        options.addArguments("--disable-logging");
-        options.addArguments("--log-level=3");
-        options.addArguments("--disable-crash-reporter");
-        options.addArguments("--no-sandbox");
-        options.addArguments("--disable-dev-shm-usage");
-        options.setHeadless(false);
-        return options;
-    }
+//    private static ChromeOptions getChromeOptions() {
+//        ChromeOptions options = new ChromeOptions();
+//        options.addArguments("--remote-allow-origins=*");
+//        options.addArguments("--disable-logging");
+//        options.addArguments("--log-level=3");
+//        options.addArguments("--disable-crash-reporter");
+//        options.addArguments("--no-sandbox");
+//        options.addArguments("--disable-dev-shm-usage");
+//        options.setHeadless(false);
+//        return options;
+//    }
 
     private static void configureDriver(RemoteWebDriver remoteWebDriver) {
         remoteWebDriver.manage().window().maximize();
@@ -67,7 +90,7 @@ public class PageActions {
         int attempts = solver.getAttempts();
         String[] evaluation = new String[5];
         for (int i = 0; i < 5; i++)
-            evaluation[i] = letterEvaluation(attempts, i+1);
+            evaluation[i] = letterEvaluation(attempts, i + 1);
 
         return solver.processEvaluation(evaluation);
     }
