@@ -1,19 +1,10 @@
-//import io.github.bonigarcia.wdm.WebDriverManager;
-
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.RemoteWebDriver;
-import org.openqa.selenium.PageLoadStrategy;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.chrome.ChromeDriver;
-
 import java.time.Duration;
 
 import static java.lang.Thread.sleep;
-import static org.openqa.selenium.chrome.ChromeDriverService.CHROME_DRIVER_VERBOSE_LOG_PROPERTY;
-import static org.openqa.selenium.chrome.ChromeDriverService.CHROME_DRIVER_WHITELISTED_IPS_PROPERTY;
 
 public class PageActions {
 
@@ -27,28 +18,6 @@ public class PageActions {
         solver = new Solver();
 
         driver = new ChromeDriver();
-        driver.get("https://google.com");
-        System.out.println("ChromeDriver launched successfully...");
-
-        // instantiate the Chrome driver
-        ChromeOptions options = new ChromeOptions();
-        options.addArguments("--remote-allow-origins=*");
-        options.addArguments("--disable-logging");
-        options.addArguments("--log-level=3");
-        options.addArguments("--disable-crash-reporter");
-        options.addArguments("--no-sandbox");
-        options.addArguments("--disable-dev-shm-usage");
-        options.setHeadless(false);
-        options.setPageLoadStrategy(PageLoadStrategy.NORMAL);
-//        driver = new ChromeDriver(options);
-
-
-//        WebDriverManager.chromedriver().setup();
-//        System.setProperty(CHROME_DRIVER_VERBOSE_LOG_PROPERTY, "false");
-//        System.setProperty(CHROME_DRIVER_WHITELISTED_IPS_PROPERTY, "127.0.0.1");
-//        driver = new ChromeDriver(getChromeOptions());
-//        configureDriver(driver);
-
         String baseUrl = "https://www.nytimes.com/games/wordle/index.html";
         driver.get(baseUrl);
 
@@ -59,18 +28,6 @@ public class PageActions {
 
         keyboard = driver.findElement(By.xpath("//div[contains(@aria-label, 'Keyboard')]"));
     }
-
-//    private static ChromeOptions getChromeOptions() {
-//        ChromeOptions options = new ChromeOptions();
-//        options.addArguments("--remote-allow-origins=*");
-//        options.addArguments("--disable-logging");
-//        options.addArguments("--log-level=3");
-//        options.addArguments("--disable-crash-reporter");
-//        options.addArguments("--no-sandbox");
-//        options.addArguments("--disable-dev-shm-usage");
-//        options.setHeadless(false);
-//        return options;
-//    }
 
     private static void configureDriver(RemoteWebDriver remoteWebDriver) {
         remoteWebDriver.manage().window().maximize();
