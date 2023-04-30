@@ -29,13 +29,6 @@ public class PageActions {
         keyboard = driver.findElement(By.xpath("//div[contains(@aria-label, 'Keyboard')]"));
     }
 
-    private static void configureDriver(RemoteWebDriver remoteWebDriver) {
-        remoteWebDriver.manage().window().maximize();
-        remoteWebDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(LOAD_TIMEOUT));
-        remoteWebDriver.manage().window().setPosition(new Point(0, 0));
-        remoteWebDriver.manage().window().setSize(new Dimension(1920, 1080));
-    }
-
     public boolean enterWord() {
         String word = solver.getWord();
 
