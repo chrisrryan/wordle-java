@@ -2,6 +2,8 @@ import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
 import java.time.Duration;
 
 import static java.lang.Thread.sleep;
@@ -18,12 +20,17 @@ public class PageActions {
         solver = new Solver();
 
         driver = new ChromeDriver();
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(2));
         String baseUrl = "https://www.nytimes.com/games/wordle/index.html";
         driver.get(baseUrl);
 
         // Close the GDPR dialogue
         driver.findElement(By.id("pz-gdpr-btn-closex")).click();
-        // Close How to play
+
+        // Click Play
+        driver.findElement(By.xpath("//button[contains(@data-testid, 'Play')]")).click();
+
+        // Click Close
         driver.findElement(By.xpath("//button[contains(@aria-label, 'Close')]")).click();
 
         keyboard = driver.findElement(By.xpath("//div[contains(@aria-label, 'Keyboard')]"));
