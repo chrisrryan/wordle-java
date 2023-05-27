@@ -9,8 +9,7 @@ import java.util.stream.Collectors;
 
 public class Solver {
 
-    private @Getter
-    int attempts;
+    private @Getter int attempts;
     private List<String> words = new ArrayList<>();
     private String[] possibles = new String[5];
     private Predicate<String> distinctLettersFilter;
