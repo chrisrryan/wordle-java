@@ -1069,6 +1069,7 @@ juror
 kappa
 karma
 kayak
+kazoo
 kebab
 khaki
 kinky
