@@ -22,6 +22,9 @@ public class PageActions {
         String baseUrl = "https://www.nytimes.com/games/wordle/index.html";
         driver.get(baseUrl);
 
+        // Close the T&C dialogue
+        driver.findElement(By.xpath("//button[contains(text(), 'Continue')]")).click();
+
         // Close the GDPR dialogue
         driver.findElement(By.id("pz-gdpr-btn-closex")).click();
 
