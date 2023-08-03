@@ -11,9 +11,9 @@ public class Solver {
 
     private @Getter int attempts;
     private List<String> words = new ArrayList<>();
-    private String[] possibles = new String[5];
-    private Predicate<String> distinctLettersFilter;
-    private Random random;
+    private final String[] possibles = new String[5];
+    private final Predicate<String> distinctLettersFilter;
+    private final Random random;
     private String latestWord;
 
     Solver() {
@@ -87,24 +87,21 @@ public class Solver {
     public String getWord() {
         attempts++;
 
-        switch (attempts) {
-            case 1:
-                latestWord = "adieu";
-                break;
-            default:
-                String viableRegEx = "";
-                for (int i = 0; i < 5; i++)
-                    viableRegEx += '[' + possibles[i] + ']';
-                Predicate<String> wordFilter = Pattern.compile(viableRegEx).asPredicate();
-                words = words.stream().filter(wordFilter).collect(Collectors.toList());
+        if (attempts == 1) {
+            latestWord = "adieu";
+        } else {
+            StringBuilder viableRegEx = new StringBuilder();
+            for (int i = 0; i < 5; i++)
+                viableRegEx.append('[').append(possibles[i]).append(']');
+            Predicate<String> wordFilter = Pattern.compile(viableRegEx.toString()).asPredicate();
+            words = words.stream().filter(wordFilter).collect(Collectors.toList());
 
-                List<String> distinctWords = words.stream().filter(distinctLettersFilter).collect(Collectors.toList());
-                if (distinctWords.size() > 0) {
-                    latestWord = distinctWords.get(random.nextInt(distinctWords.size()));
-                } else {
-                    latestWord = words.get(random.nextInt(words.size()));
-                }
-                break;
+            List<String> distinctWords = words.stream().filter(distinctLettersFilter).toList();
+            if (!distinctWords.isEmpty()) {
+                latestWord = distinctWords.get(random.nextInt(distinctWords.size()));
+            } else {
+                latestWord = words.get(random.nextInt(words.size()));
+            }
         }
         return latestWord;
     }
